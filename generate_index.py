@@ -22,7 +22,7 @@ try:
 except LookupError:
     nltk.download("punkt", quiet=True)
 
-
+from datasets import load_from_disk
 # --------------------------------------------------------------------- #
 from nltk.tokenize import PunktSentenceTokenizer
 _tok = PunktSentenceTokenizer()
@@ -43,10 +43,10 @@ def sent_starts(text: str) -> np.ndarray:
 
 def index_row(row, out_dir: Path):
     """Write .txt / .idx for one dataset row; return manifest entry."""
-    text   = row["text"]
+    text   = row["rewritten_context"]
     doc_id = row.get("doc", {}).get("arxiv_id") or str(uuid.uuid4())
 
-    # save raw text
+    # save raw text 
     txt_path = out_dir / f"{doc_id}.txt"
     txt_path.write_text(text, encoding="utf-8")
 
@@ -64,8 +64,7 @@ def main(out_dir: Path, n_docs: int):
     out_dir.mkdir(parents=True, exist_ok=True)
     # stream = datasets.load_dataset("allenai/olmo-mix-1124",
     #                                split="train", streaming=True)
-    stream = datasets.load_dataset("oscar","unshuffled_deduplicated_en",
-                                split="train", streaming=True)
+    stream = load_from_disk("./AoPS-Instruct-merged_context")
     rows = [row for _, row in zip(range(n_docs), stream)]
 
     with mp.Pool() as pool:
@@ -81,7 +80,7 @@ def main(out_dir: Path, n_docs: int):
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
-    p.add_argument("--out_dir", type=Path, default=Path("olmo_char_demo"))
-    p.add_argument("--n_docs", type=int, default=10,
+    p.add_argument("--out_dir", type=Path, default=Path("AoPS-Instruct_Index"))
+    p.add_argument("--n_docs", type=int, default=550860,
                    help="number of papers to index (default 10)")
     main(**vars(p.parse_args()))

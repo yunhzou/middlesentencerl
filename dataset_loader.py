@@ -32,7 +32,6 @@ class MiddleSentenceDataset(torch.utils.data.IterableDataset):
 
     def __init__(
         self,
-        manifest: Path,
         n_prev: int = 1,
         n_mid: int = 1,
         n_post: int = 0,
@@ -53,7 +52,7 @@ class MiddleSentenceDataset(torch.utils.data.IterableDataset):
         self.index_dir = Path(index_dir)
         self.seed = seed
 
-        mpath = Path(manifest)
+        mpath = Path(index_dir)/Path("manifest.jsonl")
         if not mpath.is_file():
             raise FileNotFoundError(mpath)
         self.meta: List[Dict] = [json.loads(l) for l in mpath.read_text().splitlines()]
@@ -149,25 +148,22 @@ class MiddleSentenceDataset(torch.utils.data.IterableDataset):
 # ---------------------------------------------------------------------- #
 def demo():
     p = argparse.ArgumentParser(description="Visual sanity-check for MiddleSentenceDataset")
-    p.add_argument("--manifest", type=Path, default="olmo_char_demo/manifest.jsonl")
-    p.add_argument("--n_samples", type=int, default=5)
-    p.add_argument("--prev",   type=int, default=1)
-    p.add_argument("--mid",    type=int, default=1)
-    p.add_argument("--post",   type=int, default=1)
+    p.add_argument("--n_samples", type=int, default=100, help=" How many samples to print, irrelavent to dataset")
+    p.add_argument("--prev",   type=int, default=30)
+    p.add_argument("--mid",    type=int, default=3)
+    p.add_argument("--post",   type=int, default=5)
     p.add_argument("--per_doc", type=str,
                    default="1",
                    help="'full' or an integer (e.g. 3) → how many windows per document")
     args = p.parse_args()
 
-    per_doc = "full" if args.per_doc.lower() == "full" else int(args.per_doc)
-
     ds = MiddleSentenceDataset(
-            manifest         = args.manifest,
             n_prev           = args.prev,
             n_mid            = args.mid,
             n_post           = args.post,
-            samples_per_doc  = 5,
-            seed             = 123)
+            samples_per_doc  = 3,
+            seed             = 123,
+            index_dir        = Path("/home/yunhengzou/middlesentencerldata/AoPS-Instruct_Index"),)
     # print the size of the dataset
     print(f"Dataset size: {len(ds):,} samples")
     from itertools import count
