@@ -185,17 +185,16 @@ def demo():
     p.add_argument("--n_samples", type=int, default=3)
     p.add_argument("--mid_len", type=int, default=2)
     p.add_argument("--per_doc", type=str, default="2")  # "full" or int
-    p.add_argument("--index_dir", type=Path, default=Path("/home/yunhengzou/middlesentencerldata/AoPS-Instruct_Index"))
     p.add_argument("--seed", type=int, default=123)
     p.add_argument("--return_mode", type=str, choices=["full","triples"], default="full")
     args = p.parse_args()
 
     per_doc: Union[int, str] = "full" if args.per_doc == "full" else int(args.per_doc)
-
+    storage_path = Path(os.getenv("STORAGE_PATH"))
     ds = ContiguousMiddleSpanDataset(
         mid_len=args.mid_len,
         samples_per_doc=per_doc,
-        index_dir=args.index_dir,
+        index_dir=storage_path / "AoPS-Instruct_Index",
         seed=args.seed,
         return_mode=args.return_mode,
     )

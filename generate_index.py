@@ -67,7 +67,13 @@ def main(dataset_dir, out_dir: Path):
     print(f"Indexed {indexed} papers into {out_dir}/ (errors: {errors})")
 
 if __name__ == "__main__":
+    import os 
+    from pathlib import Path
+    storage_path = Path(os.getenv("STORAGE_PATH"))
+    if not storage_path:
+        raise ValueError("STORAGE_PATH environment variable is not set.")
+
     main(
-        dataset_dir="/home/yunhengzou/middlesentencerldata/AoPS-Instruct-merged_context",
-        out_dir=Path("/home/yunhengzou/middlesentencerldata/AoPS-Instruct_Index"),
+        dataset_dir=storage_path / "AoPS-Instruct-merged_context",
+        out_dir=storage_path / "AoPS-Instruct_Index",
     )
