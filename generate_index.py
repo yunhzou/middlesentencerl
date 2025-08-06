@@ -69,6 +69,9 @@ def main(dataset_dir, out_dir: Path):
 if __name__ == "__main__":
     import os 
     from pathlib import Path
+    from dotenv import load_dotenv
+
+    load_dotenv()
     storage_path = Path(os.getenv("STORAGE_PATH"))
     if not storage_path:
         raise ValueError("STORAGE_PATH environment variable is not set.")
