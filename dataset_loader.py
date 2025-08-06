@@ -2,7 +2,11 @@
 from __future__ import annotations
 from pathlib import Path
 from typing import Dict, Iterable, List, Tuple, Union
+from dotenv import load_dotenv
 import argparse, json, logging, random, torch, numpy as np, mmap, os
+import os 
+from pathlib import Path
+
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s", datefmt="%H:%M:%S")
 
@@ -181,6 +185,9 @@ class ContiguousMiddleSpanDataset(torch.utils.data.IterableDataset):
 
 # ---------------- demo ----------------
 def demo():
+    from dotenv import load_dotenv
+
+    load_dotenv()
     p = argparse.ArgumentParser(description="Single-length ContiguousMiddleSpanDataset demo")
     p.add_argument("--n_samples", type=int, default=3)
     p.add_argument("--mid_len", type=int, default=2)
