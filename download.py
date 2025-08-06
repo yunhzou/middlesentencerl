@@ -2,9 +2,12 @@ from datasets import load_dataset
 from pathlib import Path
 import logging
 import os 
+# load env 
+from dotenv import load_dotenv
 
+load_dotenv()
 
-storage_path = os.getenv("STORAGE_PATH")
+storage_path = Path(os.getenv("STORAGE_PATH"))
 if not storage_path:
         raise ValueError("STORAGE_PATH environment variable is not set.")
 log_path = storage_path / "filtered_out_indices.log"
