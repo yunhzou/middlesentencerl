@@ -141,7 +141,7 @@ class ContiguousMiddleSpanDataset(torch.utils.data.IterableDataset):
             if self.return_mode == "triples":
                 yield {
                     "input":  input_text,
-                    "prev":   context[:c0].rstrip(),
+                    "prev":   context[offset:c0].rstrip(),
                     "target": context[c0:c1].strip(),
                     "post":   context[c1:].lstrip(),
                     "context": context,
@@ -197,7 +197,7 @@ class ContiguousMiddleSpanDataset(torch.utils.data.IterableDataset):
 # ---------------- demo ----------------
 def demo():
     n_samples_for_demo = 10
-    return_mode = "full"
+    return_mode = "triples"
     ds = ContiguousMiddleSpanDataset(
         mid_len=2,
         samples_per_doc=2, # or "full"
